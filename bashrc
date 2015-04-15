@@ -18,7 +18,7 @@ alias pwd="pwd -P"
 alias ssh="ssh -v"
 alias ps="ps ax -o user,pid,%cpu,%mem,bsdtime,command"
 
-PS1="|\[\e[32m\]\u:\[\e[36m\]\h:\[\e[35m\]\w:\[\e[31m\]\$?\[\e[0m\]| "
+PS1="|\[\e[32m\]\u:\[\e[36m\]\h:\[\e[35m\]\w:\[\e[31m\]\$?\[\e[0m\]:>> "
 
 awkp()
 {
