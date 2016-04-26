@@ -1,10 +1,10 @@
-export GREP_COLOR='0;35'
-export GREP_OPTIONS='--color=auto'
+
 
 #-------------------
 # Personnal Aliases
 #-------------------
-
+export GREP_COLOR='0;35'
+export GREP_OPTIONS='--color=auto'
 alias cp='cp -apvri'
 alias mv='mv -v'
 alias df='df -Th'
@@ -27,7 +27,7 @@ awkp()
 
 whatmypubIP()
 {
-        /usr/bin/curl -s ifconfig.me
+        /usr/bin/dig +short myip.opendns.com @resolver1.opendns.com
 }
 
 whatmypvtIP()
