@@ -1,0 +1,31 @@
+#!/bin/bash
+#empty error log file
+>/tmp/icinglog
+#date
+date=`date +%d,%h%Y\ %H:%M`
+#change working directory
+cd /etc/icinga/
+#removed or revert changes if not committed
+git stash
+git stash clear
+#check before staus
+before=$(git rev-parse HEAD)
+#pull repo from icinga server
+git pull
+#check after status
+after=$(git rev-parse HEAD)
+
+#check any error 
+/usr/sbin/icinga -v /etc/icinga/icinga.cfg > /tmp/icinglog
+stat=`echo $?`
+
+if [ $stat == 0 ];then 
+	echo OK
+		if [ $before == $after ];then
+			echo OK
+        	else
+			/etc/init.d/icinga reload	
+		fi
+else
+	/usr/bin/mutt -s "ICINGA:Git Push Error:$date " root@krishnabagal.com < /tmp/icinglog
+fi
