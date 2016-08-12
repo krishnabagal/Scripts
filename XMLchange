@@ -1,0 +1,11 @@
+#!/bin/bash
+Count=$(sed -n '/arr name/,/arr/p' $1 |tr -d "\n" |sed 's|<arr|\n|g'|sed 's|</arr>|\n|g'  |grep -i name|wc -l)
+
+for a in `seq 1 $Count`; do sed -n ''$a'{p;q}' l1 > k1
+
+W=$(cat k1 |grep -i name| cut -d'"' -f 2)
+sed 's|<field|<field name='$W'|g' k1 >k2 
+sed 's| name="'$W'">||g' k2 > k3
+sed 's|</field>|</field>\n|g' k3 >>output
+done
+rm -rf k1 k2 k3 
