@@ -1,0 +1,22 @@
+#!/bin/bash
+# Mar 06, 2017.
+#This script will check Haproxy Backend and Node status.
+
+#Haproxy Backend Name:
+HANAME=$( curl -sS -u <UserName>:<Password> "http://<IPADD>:<PORT>/haproxy?stats;csv" |sed "s|,| |g"  |grep -E "(^| )$1( |$)" |grep -vw "BACKEND"| awk {'print $1'})
+#Check Backed Status:
+BACKEND=$(curl -sS -u <UserName>:<Password> "http://<IPADD>:<PORT>/haproxy?stats;csv" |sed "s|,| |g"  |grep -E "(^| )$HANAME( |$)" |grep -w "BACKEND" |grep -i UP)
+
+if [ $? -eq 0 ]
+then
+        #Haproxy Backend Node status
+        HA=$(curl -sS -u <UserName>:<Password> "http://<IPADD>:<PORT>/haproxy?stats;csv" |sed "s|,| |g"  |grep -E "(^| )$1( |$)" |grep -vw "BACKEND" |grep -w UP)
+        if [ $? -eq 0 ]
+        then
+                echo "Backend_Name:$HANAME: UP, Node_Status $1: UP."
+        else
+                echo "Backend_Name:$HANAME: UP, Node_Status $1: DOWN."
+        fi
+else
+        echo "Backend $HANAME is DOWN"
+fi
