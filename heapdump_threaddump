@@ -1,0 +1,30 @@
+heapdump()
+{
+	pids=$(/bin/cat $CATALINA_PID 2> /dev/null)
+ 	if [ -z $pids ]; then
+		echo "Error getting the PID, could not dump heap.";
+		exit 1;
+	fi
+ 	echo "Trying to dump heap."
+	FILE=/tmp/$NAME-pid-${pids}-$(date +%d-%m-%Y-%I-%M).hprof
+	su -c "$JAVA_HOME/bin/jmap -dump:format=b,file=${FILE} $pids" ${TOMCAT_USER}
+ 	if [ -f $FILE ]; then
+	su -c "chmod 0644 $FILE" ${TOMCAT_USER}
+ 	echo "Heap dump taken on $(hostname --short) for instance $CATALINA_HOME : $FILE" 
+ 	fi
+}
+threaddump()
+{
+	pids=$(/bin/cat $CATALINA_PID 2> /dev/null)
+ 	if [ -z $pids ]; then
+		echo "Error getting the PID, could not dump thread.";
+		exit 1;
+	fi
+ 	echo "Trying to dump thread."
+	FILE=/tmp/$NAME-pid-${pids}-$(date +%d-%m-%Y-%I-%M)-thread_dump.log
+	su -c "$JAVA_HOME/bin/jstack -l $pids >${FILE}" ${TOMCAT_USER}
+ 	if [ -f $FILE ]; then
+	su -c "chmod 0644 $FILE" ${TOMCAT_USER}
+ 	echo "Thread dump taken on $(hostname --short) for instance $CATALINA_HOME : $FILE" 
+ 	fi
+}
